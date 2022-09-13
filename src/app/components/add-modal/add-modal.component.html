@@ -1,0 +1,11 @@
+<mat-form-field class="example-form-field" appearance="fill">
+    <mat-label>Denumire Echipa</mat-label>
+    <input matInput type="text" [(ngModel)]="denumire" >
+    <button *ngIf="denumire" matSuffix mat-icon-button aria-label="Clear" (click)="denumire=''">
+        <mat-icon>close</mat-icon>
+      </button>
+  </mat-form-field>
+<div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]>Close</button>
+    <button class="add-button" mat-button (click)="addTeam()">Add team</button>
+</div>

@@ -1,0 +1,64 @@
+<div class="actionHeader">
+  <button class="button-add-row" mat-button (click)="addRow()">Add Team</button>
+  <mat-form-field class="searchBar" appearance="standard">
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+  </mat-form-field>
+</div>
+
+<div class="mat-elevation-z6 table">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container [matColumnDef]="col.key" matSort *ngFor="let col of columnsSchema">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ col.label }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div [ngSwitch]="col.type" *ngIf="!element.isEdit">
+          <div class="btn-edit" *ngSwitchCase="'isEdit'">
+            <button mat-button *ngIf="element.ACTIV" (click)="element.isEdit = !element.isEdit">
+              Edit
+            </button>
+            <button mat-button *ngIf="!element.ACTIV" (click)="restoreTeam(element.ID_ECHIPA)" >
+                Enable
+            </button>
+            <button
+              mat-button
+              class="button-remove"
+              (click)="removeRow(element.ID_ECHIPA)"
+            >
+              Delete
+            </button>
+          </div>
+          <span *ngSwitchDefault>
+            {{ element[col.key] }}
+          </span>
+        </div>
+        <div [ngSwitch]="col.key" *ngIf="element.isEdit">
+          <div class="btn-edit" *ngSwitchCase="'isEdit'">
+            <button
+              mat-button
+              (click)="
+                element.isEdit = !element.isEdit;
+                updateRow(element.ID_ECHIPA, element.DENUMIRE)
+              "
+            >
+              Done
+            </button>
+          </div>
+          <mat-form-field class="form-input" *ngSwitchCase="'DENUMIRE'">
+            <input [type]="col.type" matInput [(ngModel)]="element[col.key]" />
+          </mat-form-field>
+          <span *ngSwitchDefault>
+            {{ element[col.key] }}
+          </span>
+        </div>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    aria-label="Select page of users"
+  ></mat-paginator>
+</div>

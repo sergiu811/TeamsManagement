@@ -1,7 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AfterViewInit, ViewChild } from '@angular/core';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TeamsServiceService } from 'src/app/services/teams-service.service';
 import { TeamInterface, ResponseInterface } from 'src/app/models/teamModel';
@@ -49,68 +49,80 @@ export class TableComponent implements AfterViewInit {
   dataSource!: MatTableDataSource<TeamInterface>
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
   columnsSchema: any = COLUMNS_SCHEMA;
+  isLoadingResults = true;
 
   @ViewChild(MatSort)
   sort!: MatSort;
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
+
+
   getTeams() {
     this.teamsService.getTeams().subscribe(data => {
       this.response = data;
       if (data) {
+        console.log(data)
         this.teams = this.response.DATA;
         this.dataSource = new MatTableDataSource(this.teams)
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
+        this.isLoadingResults = false;
       }
     })
-
   }
-  updateTeams() {
-    this.teamsService.getTeams().subscribe(data => {
+  getActiveTeams() {
+    this.teamsService.getActiveTeams().subscribe(data => {
       this.response = data;
       if (data) {
-        console.log(this.response.DATA)
-        this.dataSource.data = [...this.response.DATA]
+        console.log(data)
+        this.teams = this.response.DATA;
+        this.dataSource = new MatTableDataSource(this.teams)
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
+        this.isLoadingResults = false;
       }
     })
   }
 
+
   ngOnInit() {
+    this.getTeams();
   }
 
   ngAfterViewInit(): void {
     this.getTeams();
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
 
   addRow() {
+    console.log(this.dataSource.data)
+
     const addModalRef = this.addDialog.open(AddModalComponent)
     addModalRef.afterClosed().subscribe((res) => {
-      if (res) {
-        this.teamsService.addTeam({ DENUMIRE: res })
-       
-      }
-      this.updateTeams();
+      this.teamsService.addTeam({ DENUMIRE: res })
+      setTimeout(() => { this.getTeams(); }, 400)
     })
-    
   }
   updateRow(id: number, denumire: string) {
+    this.isLoadingResults = true;
     this.teamsService.updateTeam(id, denumire);
+    setTimeout(() => { this.getTeams(); }, 400)
   }
   public removeRow(id: number) {
     this.removeDialog.open(RemoveModalComponent).afterClosed().subscribe((confirm) => {
       if (confirm) {
-        this.dataSource.data = this.dataSource.data.filter((team) => team.ID_ECHIPA !== id);
+        this.isLoadingResults = true;
         this.teamsService.removeTeam(id)
+        setTimeout(() => { this.getTeams(); }, 400)
       }
     })
   }
 
   public restoreTeam(id: number) {
+    this.isLoadingResults = true;
     this.teamsService.restoreTeam(id)
+    setTimeout(() => { this.getTeams(); }, 400)
   }
 
   applyFilter(event: Event) {
@@ -121,6 +133,4 @@ export class TableComponent implements AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
-
 }

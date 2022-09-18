@@ -18,6 +18,8 @@ import { AddModalComponent } from './components/add-modal/add-modal.component';
 import { RemoveModalComponent } from './components/remove-modal/remove-modal.component';
 import {MatIconModule} from '@angular/material/icon'
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,7 +42,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatDatepickerModule,
     MatDialogModule,
     MatIconModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

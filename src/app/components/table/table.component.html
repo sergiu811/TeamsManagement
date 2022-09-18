@@ -1,5 +1,7 @@
 <div class="actionHeader">
   <button class="button-add-row" mat-button (click)="addRow()">Add Team</button>
+  <button class="button-add-row" mat-button (click)="getActiveTeams()">Show Active</button>
+  <button class="button-add-row" mat-button (click)="getTeams()">Show All</button>
   <mat-form-field class="searchBar" appearance="standard">
     <mat-label>Filter</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
@@ -7,9 +9,15 @@
 </div>
 
 <div class="mat-elevation-z6 table">
-  <table mat-table [dataSource]="dataSource" matSort>
-    <ng-container [matColumnDef]="col.key" matSort *ngFor="let col of columnsSchema">
-      <th mat-header-cell *matHeaderCellDef>
+  <div class="example-container mat-elevation-z8">
+    <div class="example-loading-shade"
+         *ngIf="isLoadingResults ">
+      <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  
+    </div>
+  <table mat-table [dataSource]="dataSource"  matSortActive="STATUS" matSort  matSortDisableClear matSortDirection="desc" >
+    <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
         {{ col.label }}
       </th>
       <td mat-cell *matCellDef="let element">
@@ -18,10 +26,11 @@
             <button mat-button *ngIf="element.ACTIV" (click)="element.isEdit = !element.isEdit">
               Edit
             </button>
-            <button mat-button *ngIf="!element.ACTIV" (click)="restoreTeam(element.ID_ECHIPA)" >
+            <button mat-button *ngIf="!element.ACTIV" (click)="restoreTeam(element.ID_ECHIPA); element.ACTIV=!element.ACTIV" >
                 Enable
             </button>
             <button
+            *ngIf="element.ACTIV"
               mat-button
               class="button-remove"
               (click)="removeRow(element.ID_ECHIPA)"

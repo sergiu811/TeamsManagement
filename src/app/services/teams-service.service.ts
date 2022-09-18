@@ -18,6 +18,10 @@ export class TeamsServiceService {
     return  this.http.get<ResponseInterface>(this.teamsUrl)
   }
 
+  public  getActiveTeams():  Observable<ResponseInterface>{
+    return  this.http.get<ResponseInterface>("https://recrutare.compexin.ro/api/web/echipesergiu/active")
+  }
+
   public addTeam(team:{}){
      return this.http.post<{}>(this.teamsUrl,team).subscribe()
   }

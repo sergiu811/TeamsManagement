@@ -49,14 +49,15 @@ h2 {
 }
 
 .actionHeader {
-  display: flex;
+  display: grid;
   width: 93%;
+  grid-template-columns: 1fr 1fr 1fr 9fr;
   margin: auto;
   align-items: center;
   gap: 30px;
 }
 .searchBar {
-  width: 57%;
+  width: 100%;
 }
 
 .example-loading-shade {

@@ -51,18 +51,17 @@ h2 {
 .form-input {
   padding-right: 5px;
 }
-
-.actionHeader{
-  display: flex;
-  width:93%;
-  margin:auto;
-  align-items:center;
-  gap:30px;
+.actionHeader {
+  display: grid;
+  width: 93%;
+  grid-template-columns: 1fr 1fr 1fr 9fr;
+  margin: auto;
+  align-items: center;
+  gap: 30px;
 }
-.searchBar{
-  width: 57%;
+.searchBar {
+  width: 100%;
 }
-
 .example-loading-shade {
   position: absolute;
   top: 0;

@@ -1,2 +1,7 @@
-<TeamsTable class="table"></TeamsTable>
-<PlayersTable></PlayersTable>
+<div class="menu">
+    <div class="title">Teams Management</div>
+    <button class="button" mat-button (click)="goToTeams()" >Teams</button>
+    <button  class="button"  mat-button (click)="goToPlayers()">Players</button>
+</div>
+<router-outlet>
+</router-outlet>

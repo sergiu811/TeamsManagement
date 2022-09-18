@@ -1,14 +1,15 @@
 table {
   width: 100%;
+  border-radius: 10px;
 }
 .table{
-  width: 90%;
+  width: 93%;
   margin: auto;
   position: relative;
 }
 
 table {
-  width: 90%;
+  width: 93%;
   margin: auto;
   margin-top: 25px;
 }
@@ -53,13 +54,13 @@ h2 {
 
 .actionHeader{
   display: flex;
-  width:80%;
+  width:93%;
   margin:auto;
   align-items:center;
   gap:30px;
 }
 .searchBar{
-  width: 55%;
+  width: 57%;
 }
 
 .example-loading-shade {

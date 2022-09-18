@@ -1,0 +1,49 @@
+<div class="form">
+  <mat-form-field class="example-form-field" appearance="fill">
+    <mat-label>Nume</mat-label>
+    <input matInput type="text" [(ngModel)]="nume" />
+    <button
+      *ngIf="nume"
+      matSuffix
+      mat-icon-button
+      aria-label="Clear"
+      (click)="nume = ''"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <mat-form-field class="example-form-field" appearance="fill">
+    <mat-label>Prenume</mat-label>
+    <input matInput type="text" [(ngModel)]="prenume" />
+    <button
+      *ngIf="prenume"
+      matSuffix
+      mat-icon-button
+      aria-label="Clear"
+      (click)="prenume = ''"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Choose a date</mat-label>
+    <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="dataNasterii"/>
+    <mat-hint>MM/DD/YYYY</mat-hint>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker format="Short"  >
+    </mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Team Option</mat-label>
+    <mat-select [(ngModel)]="idEchipa">
+      <mat-option *ngFor="let id of teamIDs" [value]="id">
+        {{ id }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]>Close</button>
+  <button class="add-button" [disabled]="!nume||!prenume || !dataNasterii || !idEchipa" mat-button (click)="addTeam()">Add team</button>
+</div>

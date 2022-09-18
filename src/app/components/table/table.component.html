@@ -1,5 +1,5 @@
 <div class="actionHeader">
-  <button class="button-add-row" mat-button (click)="addRow()">Add Team</button>
+  <button class="button-add-row" mat-button (click)="addTeam()">Add Team</button>
   <button class="button-add-row" mat-button (click)="getActiveTeams()">Show Active</button>
   <button class="button-add-row" mat-button (click)="getTeams()">Show All</button>
   <mat-form-field class="searchBar" appearance="standard">
@@ -33,7 +33,7 @@
             *ngIf="element.ACTIV"
               mat-button
               class="button-remove"
-              (click)="removeRow(element.ID_ECHIPA)"
+              (click)="removeTeam(element.ID_ECHIPA)"
             >
               Delete
             </button>
@@ -48,7 +48,7 @@
               mat-button
               (click)="
                 element.isEdit = !element.isEdit;
-                updateRow(element.ID_ECHIPA, element.DENUMIRE)
+                updateTeam(element.ID_ECHIPA, element.DENUMIRE)
               "
             >
               Done
@@ -68,6 +68,6 @@
   </table>
   <mat-paginator
     [pageSizeOptions]="[5, 10, 25, 100]"
-    aria-label="Select page of users"
+    aria-label="Select page of teams"
   ></mat-paginator>
 </div>

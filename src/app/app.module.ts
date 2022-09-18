@@ -7,7 +7,7 @@ import { TableComponent } from './components/table/table.component';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import { HttpClientModule } from '@angular/common/http';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule, MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -19,13 +19,18 @@ import { RemoveModalComponent } from './components/remove-modal/remove-modal.com
 import {MatIconModule} from '@angular/material/icon'
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-
+import { PlayersTableComponent } from './components/players-table/players-table.component';
+import { AddPlayerModalComponent } from './components/add-player-modal/add-player-modal.component';
+import {MatSelectModule} from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 @NgModule({
   declarations: [
     AppComponent,
     TableComponent,
     AddModalComponent,
-    RemoveModalComponent
+    RemoveModalComponent,
+    PlayersTableComponent,
+    AddPlayerModalComponent
   ],
   imports: [
     BrowserModule,
@@ -43,9 +48,11 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatDialogModule,
     MatIconModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatFormFieldModule
   ],
-  providers: [],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

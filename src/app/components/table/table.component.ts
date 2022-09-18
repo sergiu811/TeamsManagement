@@ -3,7 +3,7 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AfterViewInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { TeamsServiceService } from 'src/app/services/teams-service.service';
+import { TeamsService } from 'src/app/services/teams-service.service';
 import { TeamInterface, ResponseInterface } from 'src/app/models/teamModel';
 import { AddModalComponent } from '../add-modal/add-modal.component';
 import { RemoveModalComponent } from '../remove-modal/remove-modal.component';
@@ -38,14 +38,13 @@ const COLUMNS_SCHEMA = [
 ];
 
 @Component({
-  selector: 'Table',
+  selector: 'TeamsTable',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
 export class TableComponent implements AfterViewInit {
   response!: ResponseInterface;
-  teams!: TeamInterface[];
-  constructor(private _liveAnnouncer: LiveAnnouncer, private teamsService: TeamsServiceService, public removeDialog: MatDialog, public addDialog: MatDialog) { }
+  constructor(private _liveAnnouncer: LiveAnnouncer, private teamsService: TeamsService, public removeDialog: MatDialog, public addDialog: MatDialog) { }
   dataSource!: MatTableDataSource<TeamInterface>
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
   columnsSchema: any = COLUMNS_SCHEMA;
@@ -56,15 +55,11 @@ export class TableComponent implements AfterViewInit {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
-
-
   getTeams() {
     this.teamsService.getTeams().subscribe(data => {
       this.response = data;
       if (data) {
-        console.log(data)
-        this.teams = this.response.DATA;
-        this.dataSource = new MatTableDataSource(this.teams)
+        this.dataSource = new MatTableDataSource(this.response.DATA)
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.isLoadingResults = false;
@@ -75,16 +70,13 @@ export class TableComponent implements AfterViewInit {
     this.teamsService.getActiveTeams().subscribe(data => {
       this.response = data;
       if (data) {
-        console.log(data)
-        this.teams = this.response.DATA;
-        this.dataSource = new MatTableDataSource(this.teams)
+        this.dataSource = new MatTableDataSource(this.response.DATA)
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
         this.isLoadingResults = false;
       }
     })
   }
-
 
   ngOnInit() {
     this.getTeams();
@@ -95,21 +87,20 @@ export class TableComponent implements AfterViewInit {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
 
-  addRow() {
+  addTeam() {
     console.log(this.dataSource.data)
-
     const addModalRef = this.addDialog.open(AddModalComponent)
     addModalRef.afterClosed().subscribe((res) => {
       this.teamsService.addTeam({ DENUMIRE: res })
       setTimeout(() => { this.getTeams(); }, 400)
     })
   }
-  updateRow(id: number, denumire: string) {
+  updateTeam(id: number, denumire: string) {
     this.isLoadingResults = true;
     this.teamsService.updateTeam(id, denumire);
     setTimeout(() => { this.getTeams(); }, 400)
   }
-  public removeRow(id: number) {
+  public removeTeam(id: number) {
     this.removeDialog.open(RemoveModalComponent).afterClosed().subscribe((confirm) => {
       if (confirm) {
         this.isLoadingResults = true;

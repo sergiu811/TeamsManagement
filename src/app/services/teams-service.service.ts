@@ -8,8 +8,9 @@ import { TeamInterface,ResponseInterface } from '../models/teamModel';
   providedIn: 'root'
 })
 
-export class TeamsServiceService {
+export class TeamsService {
   private teamsUrl: string;
+  private response!:ResponseInterface
   constructor(private http: HttpClient ) { 
     this.teamsUrl='https://recrutare.compexin.ro/api/web/echipesergiu'
   }

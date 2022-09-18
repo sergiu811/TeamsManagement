@@ -1,0 +1,76 @@
+table {
+    width: 100%;
+  }
+  .table{
+    width: 90%;
+    margin: auto;
+    position: relative;
+  }
+  
+  table {
+    width: 90%;
+    margin: auto;
+    margin-top: 25px;
+  }
+  .btn-edit {
+    text-align: right;
+  }
+  h2 {
+    text-align: center;
+    padding-top: 20px;
+  }
+  
+  .table-header {
+    width: 90%;
+    margin: auto;
+    text-align: right;
+    margin-bottom: 10px;
+  }
+  
+  .button-add-row {
+    background: #1b9e1b;
+    color: #ffffff;
+    padding: 2px 15px
+  }
+  
+  .button-remove-rows {
+    background: red;
+    color: #ffffff;
+    margin-right: 5px;
+  }
+  
+  .button-remove {
+    color: red;
+  }
+  
+  ::ng-deep .mat-form-field-infix {
+    width: 100% !important;
+  }
+  
+  .form-input {
+    padding-right: 5px;
+  }
+  
+  .actionHeader{
+    display: flex;
+    width:80%;
+    margin:auto;
+    align-items:center;
+    gap:30px;
+  }
+  .searchBar{
+    width: 55%;
+  }
+  
+  .example-loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 56px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

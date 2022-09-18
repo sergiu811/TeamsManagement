@@ -1,7 +1,9 @@
-<div class="menu">
+<div class="layout">
+  <div class="menu">
     <div class="title">Teams Management</div>
-    <button class="button" mat-button (click)="goToTeams()" >Teams</button>
-    <button  class="button"  mat-button (click)="goToPlayers()">Players</button>
+    <div class="title">Hello, {{ user }} !</div>
+    <button class="button" mat-button (click)="goToTeams()">Teams</button>
+    <button class="button" mat-button (click)="goToPlayers()">Players</button>
+  </div>
+  <router-outlet> </router-outlet>
 </div>
-<router-outlet>
-</router-outlet>

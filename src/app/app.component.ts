@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'testPractic';
+  user:string= "Sergiu"
   constructor(private router:Router){}
   goToTeams(){
     this.router.navigate(['teams'])

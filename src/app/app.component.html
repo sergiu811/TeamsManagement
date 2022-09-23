@@ -1,9 +1,17 @@
-<div class="layout">
-  <div class="menu">
-    <div class="title">Teams Management</div>
-    <div class="title">Hello, {{ user }} !</div>
-    <button class="button" mat-button (click)="goToTeams()">Teams</button>
-    <button class="button" mat-button (click)="goToPlayers()">Players</button>
-  </div>
-  <router-outlet> </router-outlet>
-</div>
+<mat-sidenav-container class="container" >
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened" >
+    <div class="menuOptions">
+      <button class="button" mat-button (click)="goToTeams()">Echipe</button>
+      <button class="button" mat-button (click)="goToPlayers()">Jucatori</button>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar >
+      <mat-toolbar-row>
+        <mat-icon aria-hidden="false" (click)="sidenav.toggle()">menu</mat-icon>
+        <span>Management Echipe si Jucatori</span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <router-outlet> </router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

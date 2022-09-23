@@ -7,17 +7,14 @@ import { MatSort } from '@angular/material/sort';
 import { AddPlayerModalComponent } from '../add-player-modal/add-player-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RemoveModalComponent } from '../remove-modal/remove-modal.component';
-
+import { RestoreModalComponent } from '../restore-modal/restore-modal.component';
+import { TeamsService } from 'src/app/services/teams-service.service';
+import { ResponseInterface } from 'src/app/models/teamModel';
 const COLUMNS_SCHEMA = [
   {
     key: 'STATUS',
     type: 'text',
     label: 'STATUS',
-  },
-  {
-    key: 'ID_JUCATOR',
-    type: 'number',
-    label: 'ID',
   },
   {
     key: 'NUME',
@@ -53,14 +50,16 @@ const COLUMNS_SCHEMA = [
 })
 export class PlayersTableComponent implements AfterViewInit {
   response!: PlayerResponseInterface;
-
-  constructor(private playersService: PlayersService, public addDialog:MatDialog, public removeDialog:MatDialog) { }
+  responseTeam!:ResponseInterface;
+  constructor(private playersService: PlayersService,private teamService:TeamsService, public addDialog:MatDialog, public removeDialog:MatDialog,public restoreDialog:MatDialog) { }
 
   dataSource!: MatTableDataSource<PlayerInterface>
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
   columnsSchema: any = COLUMNS_SCHEMA;
   isLoadingResults = true;
-
+  idEchipa!:number;
+  teams!:any[];
+  
   @ViewChild(MatSort)
   sort!: MatSort;
   @ViewChild(MatPaginator)
@@ -68,6 +67,15 @@ export class PlayersTableComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
    this.getPlayers();
+   this.getTeams();
+  }
+  getTeams(){
+    this.teamService.getActiveTeams().subscribe(data=>{
+      this.responseTeam=data;
+      if(data){
+        this.teams=this.responseTeam.DATA
+      }
+     });
   }
   getPlayers() {
     this.playersService.getPlayers().subscribe(data => {
@@ -94,8 +102,10 @@ export class PlayersTableComponent implements AfterViewInit {
   addPlayer() {
     const addModalRef = this.addDialog.open(AddPlayerModalComponent)
     addModalRef.afterClosed().subscribe((res) => {
-      this.playersService.addPlayer(res)
-      setTimeout(() => { this.getPlayers(); }, 400)
+      if(res){
+        this.playersService.addPlayer(res)
+        setTimeout(() => { this.getPlayers(); }, 400)
+      }
     })
   }
  
@@ -109,13 +119,18 @@ export class PlayersTableComponent implements AfterViewInit {
     })
   }
   public restorePlayer(id: number) {
-    this.isLoadingResults = true;
-    this.playersService.restorePlayer(id)
-    setTimeout(() => { this.getPlayers(); }, 400)
+    this.removeDialog.open(RestoreModalComponent).afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.isLoadingResults = true;
+        this.playersService.restorePlayer(id)
+        setTimeout(() => { this.getPlayers(); }, 400)
+      }
+    })
+    
   }
-  updatePlayer(id:number,nume:string,prenume:string,dataN:string,idEchipa:number) {
+  updatePlayer(id:number,nume:string,prenume:string,dataN:string) {
     this.isLoadingResults = true;
-    this.playersService.updateTeam(id, nume,prenume,dataN, idEchipa);
+    this.playersService.updateTeam(id, nume,prenume,dataN, this.idEchipa);
     setTimeout(() => { this.getPlayers(); }, 400)
   }
   applyFilter(event: Event) {

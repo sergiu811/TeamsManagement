@@ -9,6 +9,7 @@ import { AddModalComponent } from '../add-modal/add-modal.component';
 import { RemoveModalComponent } from '../remove-modal/remove-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { RestoreModalComponent } from '../restore-modal/restore-modal.component';
 const COLUMNS_SCHEMA = [
   {
     key: 'STATUS',
@@ -16,19 +17,9 @@ const COLUMNS_SCHEMA = [
     label: 'STATUS',
   },
   {
-    key: 'ID_ECHIPA',
-    type: 'number',
-    label: 'ID',
-  },
-  {
     key: 'DENUMIRE',
     type: 'text',
     label: 'Denumire',
-  },
-  {
-    key: 'DATA_CREARE',
-    type: 'date',
-    label: 'Data creare',
   },
   {
     key: 'isEdit',
@@ -44,7 +35,7 @@ const COLUMNS_SCHEMA = [
 })
 export class TableComponent implements AfterViewInit {
   response!: ResponseInterface;
-  constructor(private _liveAnnouncer: LiveAnnouncer, private teamsService: TeamsService, public removeDialog: MatDialog, public addDialog: MatDialog) { }
+  constructor(private _liveAnnouncer: LiveAnnouncer, private teamsService: TeamsService, public removeDialog: MatDialog, public addDialog: MatDialog, public restoreDialog: MatDialog) { }
   dataSource!: MatTableDataSource<TeamInterface>
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
   columnsSchema: any = COLUMNS_SCHEMA;
@@ -111,9 +102,13 @@ export class TableComponent implements AfterViewInit {
   }
 
   public restoreTeam(id: number) {
-    this.isLoadingResults = true;
-    this.teamsService.restoreTeam(id)
-    setTimeout(() => { this.getTeams(); }, 400)
+    this.removeDialog.open(RestoreModalComponent).afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.isLoadingResults = true;
+        this.teamsService.restoreTeam(id)
+        setTimeout(() => { this.getTeams(); }, 400)
+      }
+    })
   }
 
   applyFilter(event: Event) {

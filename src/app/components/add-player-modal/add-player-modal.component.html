@@ -26,7 +26,7 @@
     </button>
   </mat-form-field>
   <mat-form-field appearance="fill">
-    <mat-label>Choose a date</mat-label>
+    <mat-label>Alege o data</mat-label>
     <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="dataNasterii"/>
     <mat-hint>MM/DD/YYYY</mat-hint>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -35,15 +35,15 @@
   </mat-form-field>
 
   <mat-form-field appearance="fill">
-    <mat-label>Team Option</mat-label>
+    <mat-label>Alege Echipa</mat-label>
     <mat-select [(ngModel)]="idEchipa">
-      <mat-option *ngFor="let id of teamIDs" [value]="id">
-        {{ id }}
+      <mat-option *ngFor="let team of teams " [value]="team.ID_ECHIPA">
+        {{ team.DENUMIRE }}
       </mat-option>
     </mat-select>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]>Close</button>
-  <button class="add-button" [disabled]="!nume||!prenume || !dataNasterii || !idEchipa" mat-button (click)="addTeam()">Add team</button>
+  <button mat-button [mat-dialog-close]>Inchide</button>
+  <button class="add-button" [disabled]="!nume||!prenume || !dataNasterii || !idEchipa" mat-button (click)="addTeam()">Adauga jucator</button>
 </div>

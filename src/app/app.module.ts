@@ -23,6 +23,9 @@ import { PlayersTableComponent } from './components/players-table/players-table.
 import { AddPlayerModalComponent } from './components/add-player-modal/add-player-modal.component';
 import {MatSelectModule} from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { RestoreModalComponent } from './components/restore-modal/restore-modal.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +33,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     AddModalComponent,
     RemoveModalComponent,
     PlayersTableComponent,
-    AddPlayerModalComponent
+    AddPlayerModalComponent,
+    RestoreModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,7 +54,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatSelectModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatToolbarModule,
+    MatSidenavModule
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   bootstrap: [AppComponent]

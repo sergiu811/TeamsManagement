@@ -7,6 +7,10 @@ table {
   margin: auto;
   position: relative;
 }
+.table-container{
+  max-height: 322px;
+  overflow: auto;
+}
 
 table {
   width: 93%;

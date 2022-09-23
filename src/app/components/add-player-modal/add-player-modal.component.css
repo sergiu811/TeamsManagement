@@ -1,6 +1,7 @@
 .form{
     display: flex;
     flex-direction: column;
+    width: 350px;
 }
 .add-button {
     background: #1b9e1b;

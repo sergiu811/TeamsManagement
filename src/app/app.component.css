@@ -18,10 +18,7 @@ body, .table{
     margin-bottom: 40px;
 }
 
-.button{
-    background: #1b9e1b;
-    color: #ffffff;
-}
+
 .title{
     font-size:20px;
     font-family: Roboto;
@@ -39,3 +36,21 @@ body, .table{
 .content{
     margin-top: 50px;
 }
+.menuOptions{
+    margin-top:60px;
+    display: flex;
+    flex-direction:column;
+}
+.container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .button{
+    padding: 10px 30px;
+  }
+  .button:hover{
+    color: #1b9e1b;
+  }

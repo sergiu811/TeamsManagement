@@ -8,14 +8,14 @@ import { TeamsService } from 'src/app/services/teams-service.service';
   styleUrls: ['./add-player-modal.component.css']
 })
 export class AddPlayerModalComponent implements AfterViewInit {
-  teamIDs!:any[];
+  teams!:any[];
   response!:ResponseInterface
   constructor(private dialogRef: MatDialogRef<AddPlayerModalComponent>, private teamsService:TeamsService) { }
   ngAfterViewInit(): void {
     this.teamsService.getActiveTeams().subscribe(data=>{
       this.response=data;
       if(data){
-        this.teamIDs=this.response.DATA.map((obj)=>obj.ID_ECHIPA)
+        this.teams=this.response.DATA
       }
      });
   }

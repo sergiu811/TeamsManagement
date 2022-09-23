@@ -1,7 +1,5 @@
-.add-button {
+.confirm-button{
     background: #1b9e1b;
     color: #ffffff;
-}
-.form-field{
-    width: 100%;
+    padding: 2px 15px;
 }

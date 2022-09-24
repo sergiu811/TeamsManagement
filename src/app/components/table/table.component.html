@@ -1,6 +1,6 @@
 <div class="actionHeader">
   <button class="button-add-row" mat-button (click)="addTeam()">
-   Adauga Echipa
+    Adauga Echipa
   </button>
   <button class="button-add-row" mat-button (click)="getActiveTeams()">
     Echipe active
@@ -10,14 +10,9 @@
   </button>
   <mat-form-field class="searchBar" appearance="standard">
     <mat-label>Cauta...</mat-label>
-    <input
-      matInput
-      (keyup)="applyFilter($event)"
-      #input
-    />
+    <input matInput (keyup)="searchTeam($event)" #input />
   </mat-form-field>
 </div>
-
 <div class="mat-elevation-z6 table">
   <div class="example-container mat-elevation-z8">
     <div class="example-loading-shade" *ngIf="isLoadingResults">
@@ -101,6 +96,11 @@
           mat-header-row
           *matHeaderRowDef="displayedColumns; sticky: true"
         ></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+            Nicio potrivire cu filtrul de cautare
+          </td>
+        </tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </div>

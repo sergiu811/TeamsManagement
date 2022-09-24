@@ -71,11 +71,23 @@ export class TableComponent implements AfterViewInit {
 
   ngOnInit() {
     this.getTeams();
+    
   }
 
   ngAfterViewInit(): void {
     this.getTeams();
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+  }
+  filterTeams(denumire:string){
+    (this.teamsService.filterTeams(denumire).subscribe(data =>{
+      this.response = data;
+      if (data) {
+        this.dataSource = new MatTableDataSource(this.response.DATA)
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.isLoadingResults = false;
+      }
+     }))
   }
 
   addTeam() {
@@ -111,12 +123,12 @@ export class TableComponent implements AfterViewInit {
     })
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
+  searchTeam(event: Event){
+    const denumire = (event.target as HTMLInputElement).value;
+    this.filterTeams(denumire)
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
+ 
 }

@@ -27,6 +27,12 @@ export class TeamsService {
      return this.http.post<{}>(this.teamsUrl,team).subscribe()
   }
 
+  public filterTeams(denumire:string):Observable<ResponseInterface>{
+    const body= {
+      DENUMIRE: denumire
+    }
+    return this.http.post<ResponseInterface>(`${this.teamsUrl}${'/filter'}`,body)
+  }
   public restoreTeam(id:number){
     const team={
       ID_ECHIPA:id

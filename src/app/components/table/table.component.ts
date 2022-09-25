@@ -40,6 +40,7 @@ export class TableComponent implements AfterViewInit {
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
   columnsSchema: any = COLUMNS_SCHEMA;
   isLoadingResults = true;
+  errorMessage = '';
 
   @ViewChild(MatSort)
   sort!: MatSort;
@@ -47,23 +48,37 @@ export class TableComponent implements AfterViewInit {
   paginator!: MatPaginator;
 
   getTeams() {
-    this.teamsService.getTeams().subscribe(data => {
-      this.response = data;
-      if (data) {
-        this.dataSource = new MatTableDataSource(this.response.DATA)
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+    this.teamsService.getTeams().subscribe({
+      next: (data) => {
+        this.response = data;
+        if (data) {
+          this.dataSource = new MatTableDataSource(this.response.DATA)
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.isLoadingResults = false;
+        }
+      },
+      error: (error) => {
+        this.dataSource = new MatTableDataSource()
+        this.errorMessage = error;
         this.isLoadingResults = false;
       }
     })
   }
   getActiveTeams() {
-    this.teamsService.getActiveTeams().subscribe(data => {
-      this.response = data;
-      if (data) {
-        this.dataSource = new MatTableDataSource(this.response.DATA)
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+    this.teamsService.getActiveTeams().subscribe({
+      next: (data) => {
+        this.response = data;
+        if (data) {
+          this.dataSource = new MatTableDataSource(this.response.DATA)
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.isLoadingResults = false;
+        }
+      },
+      error: (error) => {
+        this.dataSource = new MatTableDataSource()
+        this.errorMessage = error;
         this.isLoadingResults = false;
       }
     })
@@ -71,43 +86,65 @@ export class TableComponent implements AfterViewInit {
 
   ngOnInit() {
     this.getTeams();
-    
+
   }
 
   ngAfterViewInit(): void {
     this.getTeams();
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
   }
-  filterTeams(denumire:string){
-    (this.teamsService.filterTeams(denumire).subscribe(data =>{
-      this.response = data;
-      if (data) {
-        this.dataSource = new MatTableDataSource(this.response.DATA)
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+  filterTeams(denumire: string) {
+    (this.teamsService.filterTeams(denumire).subscribe({
+      next: data => {
+        this.response = data;
+        if (data) {
+          this.dataSource = new MatTableDataSource(this.response.DATA)
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+          this.isLoadingResults = false;
+        }
+      },
+      error: (error) => {
+        this.dataSource = new MatTableDataSource()
+        this.errorMessage = error;
         this.isLoadingResults = false;
       }
-     }))
+    }))
   }
 
   addTeam() {
     console.log(this.dataSource.data)
     const addModalRef = this.addDialog.open(AddModalComponent)
     addModalRef.afterClosed().subscribe((res) => {
-      this.teamsService.addTeam({ DENUMIRE: res })
+      this.teamsService.addTeam({ DENUMIRE: res }).subscribe({
+        error: (error) => {
+          this.errorMessage = error;
+          this.isLoadingResults = false;
+        }
+      });
       setTimeout(() => { this.getTeams(); }, 400)
     })
   }
   updateTeam(id: number, denumire: string) {
     this.isLoadingResults = true;
-    this.teamsService.updateTeam(id, denumire);
+    this.teamsService.updateTeam(id, denumire).subscribe({
+      error: (error) => {
+        this.errorMessage = error;
+        this.isLoadingResults = false;
+      }
+    });
     setTimeout(() => { this.getTeams(); }, 400)
   }
   public removeTeam(id: number) {
     this.removeDialog.open(RemoveModalComponent).afterClosed().subscribe((confirm) => {
       if (confirm) {
         this.isLoadingResults = true;
-        this.teamsService.removeTeam(id)
+        this.teamsService.removeTeam(id).subscribe({
+          error: (error) => {
+            this.errorMessage = error;
+            this.isLoadingResults = false;
+          }
+        })
         setTimeout(() => { this.getTeams(); }, 400)
       }
     })
@@ -117,18 +154,23 @@ export class TableComponent implements AfterViewInit {
     this.removeDialog.open(RestoreModalComponent).afterClosed().subscribe((confirm) => {
       if (confirm) {
         this.isLoadingResults = true;
-        this.teamsService.restoreTeam(id)
+        this.teamsService.restoreTeam(id).subscribe({
+          error: (error) => {
+            this.errorMessage = error;
+            this.isLoadingResults = false;
+          }
+        })
         setTimeout(() => { this.getTeams(); }, 400)
       }
     })
   }
 
-  searchTeam(event: Event){
+  searchTeam(event: Event) {
     const denumire = (event.target as HTMLInputElement).value;
     this.filterTeams(denumire)
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
- 
+
 }

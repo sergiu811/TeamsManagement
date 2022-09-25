@@ -1,11 +1,23 @@
 <div class="actionHeader">
-  <button class="button-add-row" mat-button (click)="addPlayer()">
+  <button
+    class="button-add-row"
+    mat-button
+    (click)="addPlayer(); errorMessage = ''"
+  >
     Adauga Jucator
   </button>
-  <button class="button-add-row" mat-button (click)="getActivePlayers()">
+  <button
+    class="button-add-row"
+    mat-button
+    (click)="getActivePlayers(); errorMessage = ''"
+  >
     Jucatori activi
   </button>
-  <button class="button-add-row" mat-button (click)="getPlayers()">
+  <button
+    class="button-add-row"
+    mat-button
+    (click)="getPlayers(); errorMessage = ''"
+  >
     Toti jucatorii
   </button>
   <mat-form-field class="searchBar" appearance="standard">
@@ -13,7 +25,9 @@
     <input matInput (keyup)="applyFilter($event)" #input />
   </mat-form-field>
 </div>
-
+<div class="error" *ngIf="errorMessage != ''">
+  <mat-error class="errorTextSize">{{ errorMessage }}</mat-error>
+</div>
 <div class="mat-elevation-z6 table">
   <div class="example-container mat-elevation-z8">
     <div class="example-loading-shade" *ngIf="isLoadingResults">
@@ -84,7 +98,11 @@
                 >
                   Actualizeaza
                 </button>
-                <button class="delete-remove" mat-button (click)="element.isEdit = !element.isEdit">
+                <button
+                  class="delete-remove"
+                  mat-button
+                  (click)="element.isEdit = !element.isEdit"
+                >
                   Inchide
                 </button>
               </div>
@@ -141,6 +159,11 @@
           mat-header-row
           *matHeaderRowDef="displayedColumns; sticky: true"
         ></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+            Niciun element
+          </td>
+        </tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </div>

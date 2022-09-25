@@ -1,11 +1,11 @@
 <div class="actionHeader">
-  <button class="button-add-row" mat-button (click)="addTeam()">
+  <button class="button-add-row" mat-button (click)="addTeam();errorMessage=''">
     Adauga Echipa
   </button>
-  <button class="button-add-row" mat-button (click)="getActiveTeams()">
+  <button class="button-add-row" mat-button (click)="getActiveTeams();errorMessage=''">
     Echipe active
   </button>
-  <button class="button-add-row" mat-button (click)="getTeams()">
+  <button class="button-add-row" mat-button (click)="getTeams();errorMessage=''">
     Toate echipele
   </button>
   <mat-form-field class="searchBar" appearance="standard">
@@ -13,6 +13,10 @@
     <input matInput (keyup)="searchTeam($event)" #input />
   </mat-form-field>
 </div>
+<div class="error" *ngIf="errorMessage!=''">
+  <mat-error class="errorTextSize">{{ errorMessage }}</mat-error>
+</div>
+
 <div class="mat-elevation-z6 table">
   <div class="example-container mat-elevation-z8">
     <div class="example-loading-shade" *ngIf="isLoadingResults">
@@ -42,14 +46,14 @@
                   *ngIf="element.ACTIV"
                   (click)="element.isEdit = !element.isEdit"
                 >
-                  Edit
+                  Editeaza
                 </button>
                 <button
                   mat-button
                   *ngIf="!element.ACTIV"
                   (click)="restoreTeam(element.ID_ECHIPA)"
                 >
-                  Enable
+                  Activeaza
                 </button>
                 <button
                   *ngIf="element.ACTIV"
@@ -57,7 +61,7 @@
                   class="button-remove"
                   (click)="removeTeam(element.ID_ECHIPA)"
                 >
-                  Delete
+                  Sterge
                 </button>
               </div>
               <span *ngSwitchDefault>
@@ -73,10 +77,10 @@
                     updateTeam(element.ID_ECHIPA, element.DENUMIRE)
                   "
                 >
-                  Done
+                  Actualizeaza
                 </button>
                 <button mat-button (click)="element.isEdit = !element.isEdit">
-                  Cancel
+                  Inapoi
                 </button>
               </div>
               <mat-form-field class="form-input" *ngSwitchCase="'DENUMIRE'">
@@ -96,9 +100,10 @@
           mat-header-row
           *matHeaderRowDef="displayedColumns; sticky: true"
         ></tr>
+
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-            Nicio potrivire cu filtrul de cautare
+            Niciun element 
           </td>
         </tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, retry, throwError } from 'rxjs';
 import { PlayerResponseInterface } from '../models/playerModel';
 
 @Injectable({
@@ -8,44 +8,66 @@ import { PlayerResponseInterface } from '../models/playerModel';
 })
 export class PlayersService {
   private playersURL: string;
-  constructor(private http: HttpClient ) { 
-    this.playersURL='https://recrutare.compexin.ro/api/web/jucatorisergiu'
+  constructor(private http: HttpClient) {
+    this.playersURL = 'https://recrutare.compexin.ro/api/web/jucatorisergiu'
   }
 
-  public  getPlayers():  Observable<PlayerResponseInterface>{
-    return  this.http.get<PlayerResponseInterface>(this.playersURL)
+  public getPlayers(): Observable<PlayerResponseInterface> {
+    return this.http.get<PlayerResponseInterface>(this.playersURL).pipe(retry(1), catchError(this.handleError))
   }
-  public  getActivePlayers():  Observable<PlayerResponseInterface>{
-    return  this.http.get<PlayerResponseInterface>(`${this.playersURL}/active`)
+  public getActivePlayers(): Observable<PlayerResponseInterface> {
+    return this.http.get<PlayerResponseInterface>(`${this.playersURL}/active`).pipe(retry(1), catchError(this.handleError))
   }
-  public addPlayer(player:{}){
-    return this.http.post<{}>(this.playersURL,player).subscribe()
- }
- public removePlayer(id:number){
-  const options = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-    }),
-    body: {
-      ID_JUCATOR:id
-    },
-  };
-  return this.http.delete(this.playersURL,options).subscribe()
-}
-public restorePlayer(id:number){
-  const player={
-    ID_JUCATOR:id
+  public filterPlayers(filter: string): Observable<PlayerResponseInterface> {
+    const body = {
+      NUME: filter,
+      PRENUME: filter,
+      ID_ECHIPA: filter
+    }
+    return this.http.post<PlayerResponseInterface>(`${this.playersURL}${'/filter'}`, body).pipe(retry(1), catchError(this.handleError))
   }
-  return this.http.post<{}>(`${this.playersURL}${'/restore'}`,player).subscribe()
-}
-public updateTeam(id:number, name:string, prenume:string, data:string, idEchipa:number){
-  const body= {
-    ID_JUCATOR:id,
-    NUME: name,
-    PRENUME: prenume,
-    DATA_NASTERE:data,
-    ID_ECHIPA:idEchipa
+  public addPlayer(player: {}) {
+    return this.http.post<{}>(this.playersURL, player).pipe(retry(1), catchError(this.handleError))
   }
-return this.http.put(this.playersURL,body).subscribe()
-}
+  public removePlayer(id: number) {
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: {
+        ID_JUCATOR: id
+      },
+    };
+    return this.http.delete(this.playersURL, options).pipe(retry(1), catchError(this.handleError))
+  }
+  public restorePlayer(id: number) {
+    const player = {
+      ID_JUCATOR: id
+    }
+    return this.http.post<{}>(`${this.playersURL}${'/restore'}`, player).pipe(retry(1), catchError(this.handleError))
+  }
+  public updateTeam(id: number, name: string, prenume: string, data: string, idEchipa: number) {
+    const body = {
+      ID_JUCATOR: id,
+      NUME: name,
+      PRENUME: prenume,
+      DATA_NASTERE: data,
+      ID_ECHIPA: idEchipa
+    }
+    return this.http.put(this.playersURL, body).pipe(retry(1), catchError(this.handleError))
+  }
+
+  handleError(error: any) {
+    let errorMessage = '';
+    if (error.error instanceof ErrorEvent) {
+      // client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(() => {
+      return errorMessage;
+    });
+  }
 }

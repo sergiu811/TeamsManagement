@@ -16,7 +16,9 @@
 <div class="error" *ngIf="errorMessage!=''">
   <mat-error class="errorTextSize">{{ errorMessage }}</mat-error>
 </div>
-
+<div class="success" *ngIf="successMessage != ''">
+  <span>{{ successMessage }}</span>
+</div>
 <div class="mat-elevation-z6 table">
   <div class="example-container mat-elevation-z8">
     <div class="example-loading-shade" *ngIf="isLoadingResults">
@@ -49,6 +51,7 @@
                   Editeaza
                 </button>
                 <button
+                class="activate-button"
                   mat-button
                   *ngIf="!element.ACTIV"
                   (click)="restoreTeam(element.ID_ECHIPA)"
@@ -61,7 +64,7 @@
                   class="button-remove"
                   (click)="removeTeam(element.ID_ECHIPA)"
                 >
-                  Sterge
+                  Dezactiveaza
                 </button>
               </div>
               <span *ngSwitchDefault>

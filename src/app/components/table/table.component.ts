@@ -41,11 +41,18 @@ export class TableComponent implements AfterViewInit {
   columnsSchema: any = COLUMNS_SCHEMA;
   isLoadingResults = true;
   errorMessage = '';
+  successMessage = "";
 
   @ViewChild(MatSort)
   sort!: MatSort;
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
+
+  setSuccessMessage(message: string) {
+    this.successMessage = message;
+    setTimeout(() => { this.successMessage = "" }, 3000)
+  }
+
 
   getTeams() {
     this.teamsService.getTeams().subscribe({
@@ -84,11 +91,6 @@ export class TableComponent implements AfterViewInit {
     })
   }
 
-  ngOnInit() {
-    this.getTeams();
-
-  }
-
   ngAfterViewInit(): void {
     this.getTeams();
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -117,17 +119,24 @@ export class TableComponent implements AfterViewInit {
     const addModalRef = this.addDialog.open(AddModalComponent)
     addModalRef.afterClosed().subscribe((res) => {
       this.teamsService.addTeam({ DENUMIRE: res }).subscribe({
+        next: () => {
+          this.setSuccessMessage("Echipa adaugata cu succes!")
+        },
         error: (error) => {
           this.errorMessage = error;
           this.isLoadingResults = false;
         }
       });
       setTimeout(() => { this.getTeams(); }, 400)
+
     })
   }
   updateTeam(id: number, denumire: string) {
     this.isLoadingResults = true;
     this.teamsService.updateTeam(id, denumire).subscribe({
+      next: () => {
+        this.setSuccessMessage("Echipa actualizata cu succes!")
+      },
       error: (error) => {
         this.errorMessage = error;
         this.isLoadingResults = false;
@@ -140,6 +149,9 @@ export class TableComponent implements AfterViewInit {
       if (confirm) {
         this.isLoadingResults = true;
         this.teamsService.removeTeam(id).subscribe({
+          next: () => {
+            this.setSuccessMessage("Echipa dezactivata cu succes!")
+          },
           error: (error) => {
             this.errorMessage = error;
             this.isLoadingResults = false;
@@ -155,6 +167,9 @@ export class TableComponent implements AfterViewInit {
       if (confirm) {
         this.isLoadingResults = true;
         this.teamsService.restoreTeam(id).subscribe({
+          next: () => {
+            this.setSuccessMessage("Echipa activata cu succes!")
+          },
           error: (error) => {
             this.errorMessage = error;
             this.isLoadingResults = false;

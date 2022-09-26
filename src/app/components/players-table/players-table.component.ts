@@ -61,7 +61,8 @@ export class PlayersTableComponent implements AfterViewInit {
   idEchipa!: number;
   idEchipaSearch!: any;
   teams!: TeamInterface[];
-  errorMessage = ''
+  errorMessage = '';
+  successMessage="";
   nume: string = "";
   prenume: string = "";
   searchActive: boolean = false;
@@ -70,6 +71,11 @@ export class PlayersTableComponent implements AfterViewInit {
   sort!: MatSort;
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
+
+  setSuccessMessage(message:string){
+    this.successMessage=message;
+    setTimeout(() => { this.successMessage="" }, 3000)
+  }
 
  allClear(){
   if(this.nume=="" && this.prenume=="" && this.idEchipaSearch==null) 
@@ -163,6 +169,7 @@ export class PlayersTableComponent implements AfterViewInit {
           }
         })
         setTimeout(() => { this.getPlayers(); }, 400)
+       this.setSuccessMessage("Jucator adaugat cu succes!")
       }
     })
   }
@@ -179,6 +186,7 @@ export class PlayersTableComponent implements AfterViewInit {
           }
         })
         setTimeout(() => { this.getPlayers(); }, 400)
+        this.setSuccessMessage("Jucator dezactivat cu succes!")
       }
     })
   }
@@ -195,6 +203,7 @@ export class PlayersTableComponent implements AfterViewInit {
           }
         })
         setTimeout(() => { this.getPlayers(); }, 400)
+        this.setSuccessMessage("Jucator activat cu succes!")
       }
     })
 
@@ -210,15 +219,7 @@ export class PlayersTableComponent implements AfterViewInit {
       }
     });
     setTimeout(() => { this.getPlayers(); }, 400)
-  }
-
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.setSuccessMessage("Jucator actualizat cu succes!")
   }
 
   filterPlayers(nume: string, prenume: string, idEchipa: number) {

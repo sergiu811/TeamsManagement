@@ -31,7 +31,9 @@ h2 {
   text-align: right;
   margin-bottom: 10px;
 }
-
+.activate-button{
+  color: #1b9e1b;
+}
 .button-add-row {
   background: #1b9e1b;
   color: #ffffff;
@@ -86,4 +88,17 @@ h2 {
   margin-top:20px;
   margin-bottom:20px;
   padding: 20px 10px;
+}
+.success {
+  width: 92%;
+  margin: auto;
+  box-shadow: 0px 5px 5px -3px rgb(0 0 0 / 20%),
+    0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%);
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px 10px;
+  color:#1b9e1b;
+  font-weight: bold;
+  
 }

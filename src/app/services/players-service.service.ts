@@ -18,11 +18,11 @@ export class PlayersService {
   public getActivePlayers(): Observable<PlayerResponseInterface> {
     return this.http.get<PlayerResponseInterface>(`${this.playersURL}/active`).pipe(retry(1), catchError(this.handleError))
   }
-  public filterPlayers(filter: string): Observable<PlayerResponseInterface> {
+  public filterPlayers(nume: string,prenume: string,idEchipa: number): Observable<PlayerResponseInterface> {
     const body = {
-      NUME: filter,
-      PRENUME: filter,
-      ID_ECHIPA: filter
+      NUME: nume,
+      PRENUME: prenume,
+      ID_ECHIPA: idEchipa
     }
     return this.http.post<PlayerResponseInterface>(`${this.playersURL}${'/filter'}`, body).pipe(retry(1), catchError(this.handleError))
   }

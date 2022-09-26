@@ -1,30 +1,73 @@
 <div class="actionHeader">
-  <button
-    class="button-add-row"
-    mat-button
-    (click)="addPlayer(); errorMessage = ''"
-  >
-    Adauga Jucator
-  </button>
-  <button
-    class="button-add-row"
-    mat-button
-    (click)="getActivePlayers(); errorMessage = ''"
-  >
-    Jucatori activi
-  </button>
-  <button
-    class="button-add-row"
-    mat-button
-    (click)="getPlayers(); errorMessage = ''"
-  >
-    Toti jucatorii
-  </button>
-  <mat-form-field class="searchBar" appearance="standard">
-    <mat-label>Cauta...</mat-label>
-    <input matInput (keyup)="applyFilter($event)" #input />
-  </mat-form-field>
+  <div class="actions">
+    <button
+      class="button-add-row"
+      mat-button
+      (click)=" searchActive = false; addPlayer(); errorMessage = '';"
+    >
+      Adauga Jucator
+    </button>
+    <button
+      class="button-add-row"
+      mat-button
+      (click)="searchActive = false;getActivePlayers(); errorMessage = '' "
+    >
+      Jucatori activi
+    </button>
+    <button
+      class="button-add-row"
+      mat-button
+      (click)=" searchActive = false; getPlayers(); errorMessage = ''"
+    >
+      Toti jucatorii
+    </button>
+  </div>
+  <div class="search-area">
+    <mat-form-field class="example-form-field">
+      <mat-label>Nume</mat-label>
+      <input matInput type="text" [(ngModel)]="nume" (input)="allClear()" />
+      <button
+        *ngIf="nume"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="nume = ''"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field class="example-form-field">
+      <mat-label>Prenume</mat-label>
+      <input matInput type="text" [(ngModel)]="prenume" (input)="allClear()" />
+      <button
+        *ngIf="prenume"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="prenume = ''"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Alege Echipa</mat-label>
+      <mat-select [(ngModel)]="idEchipaSearch" (selectionChange)="allClear()">
+        <mat-option>None</mat-option>
+        <mat-option *ngFor="let team of teams" [value]="team.ID_ECHIPA">
+          {{ team.DENUMIRE }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button
+      class="button-add-row"
+      mat-button
+      (click)="deleteFilters(); errorMessage = ''; searchActive = true"
+    >
+      Sterge Filtre
+    </button>
+  </div>
 </div>
+
 <div class="error" *ngIf="errorMessage != ''">
   <mat-error class="errorTextSize">{{ errorMessage }}</mat-error>
 </div>
@@ -76,7 +119,7 @@
                 </button>
               </div>
               <span *ngIf="col.key == 'DENUMIRE_ECHIPA'">
-                {{ element.ECHIPA.DENUMIRE }}
+                {{getTeamName(element.ID_ECHIPA)}}
               </span>
               <span *ngSwitchDefault>
                 {{ element[col.key] }}

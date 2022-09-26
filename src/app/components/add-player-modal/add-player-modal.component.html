@@ -1,5 +1,5 @@
 <div class="form">
-  <mat-form-field class="example-form-field" appearance="fill">
+  <mat-form-field class="example-form-field" >
     <mat-label>Nume</mat-label>
     <input matInput type="text" [(ngModel)]="nume" />
     <button
@@ -12,7 +12,7 @@
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
-  <mat-form-field class="example-form-field" appearance="fill">
+  <mat-form-field class="example-form-field" >
     <mat-label>Prenume</mat-label>
     <input matInput type="text" [(ngModel)]="prenume" />
     <button
@@ -25,7 +25,7 @@
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
-  <mat-form-field appearance="fill">
+  <mat-form-field  >
     <mat-label>Alege o data</mat-label>
     <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="dataNasterii"/>
     <mat-hint>MM/DD/YYYY</mat-hint>
@@ -34,7 +34,7 @@
     </mat-datepicker>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <mat-form-field >
     <mat-label>Alege Echipa</mat-label>
     <mat-select [(ngModel)]="idEchipa">
       <mat-option *ngFor="let team of teams " [value]="team.ID_ECHIPA">

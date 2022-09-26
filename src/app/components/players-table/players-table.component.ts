@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { PlayersService } from 'src/app/services/players-service.service';
 import { PlayerInterface, PlayerResponseInterface } from 'src/app/models/playerModel';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,6 +10,7 @@ import { RemoveModalComponent } from '../remove-modal/remove-modal.component';
 import { RestoreModalComponent } from '../restore-modal/restore-modal.component';
 import { TeamsService } from 'src/app/services/teams-service.service';
 import { ResponseInterface } from 'src/app/models/teamModel';
+import { TeamInterface } from 'src/app/models/teamModel';
 const COLUMNS_SCHEMA = [
   {
     key: 'STATUS',
@@ -58,14 +59,32 @@ export class PlayersTableComponent implements AfterViewInit {
   columnsSchema: any = COLUMNS_SCHEMA;
   isLoadingResults = true;
   idEchipa!: number;
-  teams!: any[];
+  idEchipaSearch!: any;
+  teams!: TeamInterface[];
   errorMessage = ''
+  nume: string = "";
+  prenume: string = "";
+  searchActive: boolean = false;
 
   @ViewChild(MatSort)
   sort!: MatSort;
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
+ allClear(){
+  if(this.nume=="" && this.prenume=="" && this.idEchipaSearch==null) 
+  {
+    this.getPlayers();
+  }
+  else
+  this.searchPlayer()
+ }
+ deleteFilters(){
+  this.nume="";
+  this.prenume="";
+  this.idEchipaSearch=null;
+  this.allClear();
+ }
   ngAfterViewInit(): void {
     this.getPlayers();
     this.getTeams();
@@ -86,8 +105,16 @@ export class PlayersTableComponent implements AfterViewInit {
       }
     });
   }
-
+  getTeamName(id: number) {
+    if (this.teams) {
+      let team!: TeamInterface[];
+      team = this.teams.filter(x => x.ID_ECHIPA === id);
+      return team[0].DENUMIRE
+    }
+    return null;
+  }
   getPlayers() {
+
     this.playersService.getPlayers().subscribe({
       next: (data) => {
         this.response = data;
@@ -194,8 +221,8 @@ export class PlayersTableComponent implements AfterViewInit {
     }
   }
 
-  filterPlayers(filter: string) {
-    (this.playersService.filterPlayers(filter).subscribe(data => {
+  filterPlayers(nume: string, prenume: string, idEchipa: number) {
+    (this.playersService.filterPlayers(nume, prenume, idEchipa).subscribe(data => {
       this.response = data;
       if (data) {
         this.dataSource = new MatTableDataSource(this.response.DATA)
@@ -205,9 +232,8 @@ export class PlayersTableComponent implements AfterViewInit {
       }
     }))
   }
-  searchPlayer(event: Event) {
-    const filter = (event.target as HTMLInputElement).value;
-    this.filterPlayers(filter)
+  searchPlayer() {
+    this.filterPlayers(this.nume, this.prenume, this.idEchipaSearch)
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }

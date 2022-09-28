@@ -153,15 +153,9 @@
                 Actualizeaza
               </button>
               <button
-                [disabled]="
-                  !element.NUME ||
-                  !element.PRENUME ||
-                  !element.ID_ECHIPA ||
-                  !element.DATA_NASTERE
-                "
                 class="delete-remove"
                 mat-button
-                (click)="element.isEdit = !element.isEdit"
+                (click)="element.isEdit = !element.isEdit; getPlayers()"
               >
                 Inchide
               </button>

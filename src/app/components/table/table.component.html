@@ -98,10 +98,9 @@
               </button>
               <button
                 mat-button
-                [disabled]="!element.DENUMIRE"
-                (click)="element.isEdit = !element.isEdit"
+                (click)="element.isEdit = !element.isEdit; getTeams()"
               >
-                Inapoi
+                Inchide
               </button>
             </div>
             <mat-form-field class="form-input" *ngSwitchCase="'DENUMIRE'">

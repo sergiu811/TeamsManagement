@@ -11,6 +11,7 @@ import { RestoreModalComponent } from '../restore-modal/restore-modal.component'
 import { TeamsService } from 'src/app/services/teams-service.service';
 import { ResponseInterface } from 'src/app/models/teamModel';
 import { TeamInterface } from 'src/app/models/teamModel';
+import { DatePipe } from '@angular/common'
 const COLUMNS_SCHEMA = [
   {
     key: 'STATUS',
@@ -52,7 +53,7 @@ const COLUMNS_SCHEMA = [
 export class PlayersTableComponent implements AfterViewInit {
   response!: PlayerResponseInterface;
   responseTeam!: ResponseInterface;
-  constructor(private playersService: PlayersService, private teamService: TeamsService, public addDialog: MatDialog, public removeDialog: MatDialog, public restoreDialog: MatDialog) { }
+  constructor(public datepipe: DatePipe, private playersService: PlayersService, private teamService: TeamsService, public addDialog: MatDialog, public removeDialog: MatDialog, public restoreDialog: MatDialog) { }
 
   dataSource!: MatTableDataSource<PlayerInterface>
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
@@ -62,7 +63,7 @@ export class PlayersTableComponent implements AfterViewInit {
   idEchipaSearch!: any;
   teams!: TeamInterface[];
   errorMessage = '';
-  successMessage="";
+  successMessage = "";
   nume: string = "";
   prenume: string = "";
   searchActive: boolean = false;
@@ -72,32 +73,31 @@ export class PlayersTableComponent implements AfterViewInit {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
-  setSuccessMessage(message:string){
-    this.successMessage=message;
-    setTimeout(() => { this.successMessage="" }, 3000)
+  setSuccessMessage(message: string) {
+    this.successMessage = message;
+    setTimeout(() => { this.successMessage = "" }, 3000)
   }
 
- allClear(){
-  if(this.nume=="" && this.prenume=="" && this.idEchipaSearch==null) 
-  {
-    this.getPlayers();
+  allClear() {
+    if (this.nume == "" && this.prenume == "" && this.idEchipaSearch == null) {
+      this.getPlayers();
+    }
+    else
+      this.searchPlayer()
   }
-  else
-  this.searchPlayer()
- }
- deleteFilters(){
-  this.nume="";
-  this.prenume="";
-  this.idEchipaSearch=null;
-  this.allClear();
- }
+  deleteFilters() {
+    this.nume = "";
+    this.prenume = "";
+    this.idEchipaSearch = null;
+    this.allClear();
+  }
   ngAfterViewInit(): void {
     this.getPlayers();
     this.getTeams();
   }
 
   getTeams() {
-    this.teamService.getActiveTeams().subscribe({
+    this.teamService.getTeams().subscribe({
       next: (data) => {
         this.responseTeam = data;
         if (data) {
@@ -162,14 +162,16 @@ export class PlayersTableComponent implements AfterViewInit {
     addModalRef.afterClosed().subscribe((res) => {
       if (res) {
         this.playersService.addPlayer(res).subscribe({
+          next: () => {
+            setTimeout(() => { this.getPlayers(); }, 400)
+            this.setSuccessMessage("Jucator adaugat cu succes!")
+          },
           error: (error) => {
             this.dataSource = new MatTableDataSource()
             this.errorMessage = error;
             this.isLoadingResults = false;
           }
         })
-        setTimeout(() => { this.getPlayers(); }, 400)
-       this.setSuccessMessage("Jucator adaugat cu succes!")
       }
     })
   }
@@ -179,14 +181,16 @@ export class PlayersTableComponent implements AfterViewInit {
       if (confirm) {
         this.isLoadingResults = true;
         this.playersService.removePlayer(id).subscribe({
+          next: () => {
+            setTimeout(() => { this.getPlayers(); }, 400)
+            this.setSuccessMessage("Jucator dezactivat cu succes!")
+          },
           error: (error) => {
             this.dataSource = new MatTableDataSource()
             this.errorMessage = error;
             this.isLoadingResults = false;
           }
         })
-        setTimeout(() => { this.getPlayers(); }, 400)
-        this.setSuccessMessage("Jucator dezactivat cu succes!")
       }
     })
   }
@@ -196,30 +200,38 @@ export class PlayersTableComponent implements AfterViewInit {
       if (confirm) {
         this.isLoadingResults = true;
         this.playersService.restorePlayer(id).subscribe({
+          next: () => {
+            setTimeout(() => { this.getPlayers(); }, 400)
+            this.setSuccessMessage("Jucator activat cu succes!")
+          },
           error: (error) => {
             this.dataSource = new MatTableDataSource()
             this.errorMessage = error;
             this.isLoadingResults = false;
           }
         })
-        setTimeout(() => { this.getPlayers(); }, 400)
-        this.setSuccessMessage("Jucator activat cu succes!")
       }
     })
 
   }
+  getDate(date: any) {
+    return this.datepipe.transform(date, 'yyyy-MM-dd')
+  }
 
-  updatePlayer(id: number, nume: string, prenume: string, dataN: string) {
+  updatePlayer(id: number, nume: string, prenume: string, dataN: string, idE: number) {
     this.isLoadingResults = true;
-    this.playersService.updateTeam(id, nume, prenume, dataN, this.idEchipa).subscribe({
+    this.playersService.updatePlayer(id, nume, prenume, dataN, idE).subscribe({
+      next: () => {
+        setTimeout(() => { this.getPlayers(); }, 400)
+        this.setSuccessMessage("Jucator actualizat cu succes!")
+      },
       error: (error) => {
         this.dataSource = new MatTableDataSource()
         this.errorMessage = error;
         this.isLoadingResults = false;
       }
     });
-    setTimeout(() => { this.getPlayers(); }, 400)
-    this.setSuccessMessage("Jucator actualizat cu succes!")
+
   }
 
   filterPlayers(nume: string, prenume: string, idEchipa: number) {

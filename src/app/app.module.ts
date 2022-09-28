@@ -26,6 +26,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { RestoreModalComponent } from './components/restore-modal/restore-modal.component';
+import { DatePipe } from '@angular/common'
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,7 +59,7 @@ import { RestoreModalComponent } from './components/restore-modal/restore-modal.
     MatToolbarModule,
     MatSidenavModule
   ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' },DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

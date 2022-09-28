@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ResponseInterface } from 'src/app/models/teamModel';
 import { TeamsService } from 'src/app/services/teams-service.service';
+import {FormControl, Validators} from '@angular/forms';
 @Component({
   selector: 'app-add-player-modal',
   templateUrl: './add-player-modal.component.html',
@@ -12,7 +13,7 @@ export class AddPlayerModalComponent implements AfterViewInit {
   response!:ResponseInterface
   constructor(private dialogRef: MatDialogRef<AddPlayerModalComponent>, private teamsService:TeamsService) { }
   ngAfterViewInit(): void {
-    this.teamsService.getActiveTeams().subscribe(data=>{
+    this.teamsService.getTeams().subscribe(data=>{
       this.response=data;
       if(data){
         this.teams=this.response.DATA
@@ -23,6 +24,7 @@ export class AddPlayerModalComponent implements AfterViewInit {
   prenume: string = "";
   dataNasterii:string=""
   idEchipa!:number;
+
   ngOnInit(): void {
   
   }

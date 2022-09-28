@@ -1,7 +1,10 @@
 <div class="form">
   <mat-form-field class="example-form-field" >
     <mat-label>Nume</mat-label>
-    <input matInput type="text" [(ngModel)]="nume" />
+    <input matInput type="text" [(ngModel)]="nume" #numeF="ngModel" required/>
+    <mat-error *ngIf="numeF.errors?.['required'] && numeF.touched"   class="alert alert-danger">
+      Numele jucatorului este obligatoriu
+    </mat-error>
     <button
       *ngIf="nume"
       matSuffix
@@ -14,7 +17,10 @@
   </mat-form-field>
   <mat-form-field class="example-form-field" >
     <mat-label>Prenume</mat-label>
-    <input matInput type="text" [(ngModel)]="prenume" />
+    <input matInput type="text" [(ngModel)]="prenume" #prenumeF="ngModel" required />
+    <mat-error *ngIf="prenumeF.errors?.['required'] && prenumeF.touched"   class="alert alert-danger">
+      Prenumele jucatorului este obligatoriu
+    </mat-error>
     <button
       *ngIf="prenume"
       matSuffix
@@ -27,7 +33,10 @@
   </mat-form-field>
   <mat-form-field  >
     <mat-label>Alege o data</mat-label>
-    <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="dataNasterii"/>
+    <input matInput [matDatepicker]="picker" name="date" [(ngModel)]="dataNasterii" required #dataF="ngModel"/>
+    <mat-error *ngIf="dataF.errors?.['required'] && dataF.touched"   class="alert alert-danger">
+      Data nasterii este obligatorie
+    </mat-error>
     <mat-hint>MM/DD/YYYY</mat-hint>
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker format="Short"  >
@@ -36,11 +45,14 @@
 
   <mat-form-field >
     <mat-label>Alege Echipa</mat-label>
-    <mat-select [(ngModel)]="idEchipa">
+    <mat-select [(ngModel)]="idEchipa"  required #echipaF="ngModel">
       <mat-option *ngFor="let team of teams " [value]="team.ID_ECHIPA">
         {{ team.DENUMIRE }}
       </mat-option>
     </mat-select>
+    <mat-error *ngIf="echipaF.errors?.['required'] && echipaF.touched"   class="alert alert-danger">
+      Echipa este obligatorie
+    </mat-error>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>

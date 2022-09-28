@@ -10,6 +10,7 @@ import { RemoveModalComponent } from '../remove-modal/remove-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { RestoreModalComponent } from '../restore-modal/restore-modal.component';
+import { DatePipe } from '@angular/common'
 const COLUMNS_SCHEMA = [
   {
     key: 'STATUS',
@@ -20,6 +21,16 @@ const COLUMNS_SCHEMA = [
     key: 'DENUMIRE',
     type: 'text',
     label: 'Denumire',
+  },
+  {
+    key: 'DATA_CREARE',
+    type: 'date',
+    label: 'Data creare',
+  },
+  {
+    key: 'DATA_MODIFICARE',
+    type: 'date',
+    label: 'Data modificare',
   },
   {
     key: 'isEdit',
@@ -35,7 +46,7 @@ const COLUMNS_SCHEMA = [
 })
 export class TableComponent implements AfterViewInit {
   response!: ResponseInterface;
-  constructor(private _liveAnnouncer: LiveAnnouncer, private teamsService: TeamsService, public removeDialog: MatDialog, public addDialog: MatDialog, public restoreDialog: MatDialog) { }
+  constructor(public datepipe: DatePipe, private teamsService: TeamsService, public removeDialog: MatDialog, public addDialog: MatDialog, public restoreDialog: MatDialog) { }
   dataSource!: MatTableDataSource<TeamInterface>
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
   columnsSchema: any = COLUMNS_SCHEMA;
@@ -91,6 +102,10 @@ export class TableComponent implements AfterViewInit {
     })
   }
 
+  getDate(date: any) {
+    return this.datepipe.transform(date, 'yyyy-MM-dd')
+  }
+
   ngAfterViewInit(): void {
     this.getTeams();
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -115,34 +130,36 @@ export class TableComponent implements AfterViewInit {
   }
 
   addTeam() {
-    console.log(this.dataSource.data)
     const addModalRef = this.addDialog.open(AddModalComponent)
     addModalRef.afterClosed().subscribe((res) => {
-      this.teamsService.addTeam({ DENUMIRE: res }).subscribe({
-        next: () => {
-          this.setSuccessMessage("Echipa adaugata cu succes!")
-        },
-        error: (error) => {
-          this.errorMessage = error;
-          this.isLoadingResults = false;
-        }
-      });
-      setTimeout(() => { this.getTeams(); }, 400)
-
+      if(res){
+        this.teamsService.addTeam({ DENUMIRE: res }).subscribe({
+          next: () => {
+            this.setSuccessMessage("Echipa adaugata cu succes!")
+            setTimeout(() => { this.getTeams(); }, 400)
+          },
+          error: (error) => {
+            this.errorMessage = error;
+            this.isLoadingResults = false;
+          }
+        });
+      }
     })
   }
   updateTeam(id: number, denumire: string) {
     this.isLoadingResults = true;
     this.teamsService.updateTeam(id, denumire).subscribe({
-      next: () => {
+      next: (data) => {
+        console.log(data)
         this.setSuccessMessage("Echipa actualizata cu succes!")
+        setTimeout(() => { this.getTeams(); }, 400)
       },
       error: (error) => {
         this.errorMessage = error;
         this.isLoadingResults = false;
       }
     });
-    setTimeout(() => { this.getTeams(); }, 400)
+   
   }
   public removeTeam(id: number) {
     this.removeDialog.open(RemoveModalComponent).afterClosed().subscribe((confirm) => {
@@ -151,13 +168,14 @@ export class TableComponent implements AfterViewInit {
         this.teamsService.removeTeam(id).subscribe({
           next: () => {
             this.setSuccessMessage("Echipa dezactivata cu succes!")
+            setTimeout(() => { this.getTeams(); }, 400)
           },
           error: (error) => {
             this.errorMessage = error;
             this.isLoadingResults = false;
           }
         })
-        setTimeout(() => { this.getTeams(); }, 400)
+      
       }
     })
   }
@@ -169,13 +187,14 @@ export class TableComponent implements AfterViewInit {
         this.teamsService.restoreTeam(id).subscribe({
           next: () => {
             this.setSuccessMessage("Echipa activata cu succes!")
+            setTimeout(() => { this.getTeams(); }, 400)
           },
           error: (error) => {
             this.errorMessage = error;
             this.isLoadingResults = false;
           }
         })
-        setTimeout(() => { this.getTeams(); }, 400)
+     
       }
     })
   }

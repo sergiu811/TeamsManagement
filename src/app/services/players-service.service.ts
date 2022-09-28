@@ -46,7 +46,7 @@ export class PlayersService {
     }
     return this.http.post<{}>(`${this.playersURL}${'/restore'}`, player).pipe(retry(1), catchError(this.handleError))
   }
-  public updateTeam(id: number, name: string, prenume: string, data: string, idEchipa: number) {
+  public updatePlayer(id: number, name: string, prenume: string, data: any, idEchipa: number) {
     const body = {
       ID_JUCATOR: id,
       NUME: name,

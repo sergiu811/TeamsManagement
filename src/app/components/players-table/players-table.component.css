@@ -2,18 +2,15 @@
   width: 93%;
   margin: auto;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .table-container {
-  max-height: 322px;
+  height: 70vh;
   overflow: auto;
 }
 
-table {
-  width: 93%;
-  margin: auto;
-  margin-top: 25px;
-}
 .btn-edit {
   text-align: right;
 }
@@ -119,4 +116,7 @@ h2 {
 }
 .activate-button{
   color: #1b9e1b;
+}
+mat-cell{
+  padding: 10px 20px;
 }
